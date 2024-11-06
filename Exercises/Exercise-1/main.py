@@ -14,7 +14,15 @@ download_uris = [
     "https://divvy-tripdata.s3.amazonaws.com/Divvy_Trips_2220_Q1.zip",
 ]
 
-def download_files(url, dest_path):
+def download_files(url: str, dest_path: str) -> None:
+    '''
+    Função que realiza o download de um arquivo ZIP, extrai seu conteúdo
+    e organiza os arquivos extraídos no diretório de destino especificado.
+
+    Parâmetros:
+    - url: Endereço do arquivo ZIP a ser baixado.
+    - dest_path: Caminho onde os arquivos extraídos serão salvos.
+    '''
     
     if requests.head(url, timeout = 5).status_code == 200:
 
@@ -44,14 +52,30 @@ def download_files(url, dest_path):
     else:
         print('Link do arquivo inávlido')
 
-def create_dir(caminho):
+def create_dir(caminho: str) -> None:
+    '''
+    Criação do diretório de destino caso ele não exista 
+
+    Parâmetros:
+    - caminho: Caminho do diretório a ser criado.
+    '''
     os.makedirs(caminho, exist_ok=True)
 
-def dowload_files_parallel(urls, dest_path):
+def dowload_files_parallel(urls: str, dest_path: str) -> None:
+    '''
+    Função para realizar o download paralelo dos arquivos de uma lista de URLs.
+
+    Parâmetros:
+    - urls: Lista de URLs de arquivos ZIP a serem baixados.
+    - dest_path: Caminho onde os arquivos extraídos serão salvos.
+    '''
     with ThreadPoolExecutor(max_workers = 5) as executor:
         executor.map(lambda url: download_files(url, dest_path), urls)
 
 def main():
+    '''
+    Função principal que gerencia o fluxo do programa.
+    '''
     create_dir('downloads')
     dowload_files_parallel(download_uris, 'downloads')
     
