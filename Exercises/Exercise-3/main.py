@@ -1,7 +1,6 @@
 import requests
 import io
 import gzip
-import time
 import os
 import boto3
 
@@ -120,9 +119,6 @@ def main():
     else:
         print('Falha no download ou leitura do arquivo')
 
-
-    # Pausa para visualização
-    time.sleep(100)
 
 if __name__ == "__main__":
     main()
