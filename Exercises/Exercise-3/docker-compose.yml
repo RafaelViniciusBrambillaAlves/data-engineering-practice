@@ -1,8 +1,5 @@
-version: "3.9"
 services:
   run:
     build: .
     image: "exercise-3"
-    volumes:
-      - .:/app
     command: python3 main.py
