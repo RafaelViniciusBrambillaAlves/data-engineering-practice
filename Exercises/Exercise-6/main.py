@@ -3,6 +3,12 @@ from pyspark.sql.functions import col, to_date, unix_timestamp, avg, coalesce, c
 import os
 import zipfile
 import shutil
+from src.question1 import question_1
+from src.question2 import question_2
+from src.question3 import question_3
+from src.question4 import question_4
+from src.question5 import question_5
+from src.question6 import question_6
 
 def create_dir(path: str) -> None:
     """
@@ -55,84 +61,6 @@ def read_csv_files(reports_folder, spark):
 
     return dataframes
 
-def question_1(dataframes, destination_path):
-
-    df1 = dataframes[0].withColumn("trip_duration_minutes", (unix_timestamp("end_time") - unix_timestamp("start_time")) / 60)
-    df1 = df1.withColumn("date", to_date(col("start_time")))
-    avg_duration_per_day1 = df1.groupby("date").agg(avg("trip_duration_minutes").alias("avg_trip_duration_df1"))
-
-    
-    df2 = dataframes[1].withColumn("trip_duration_minutes", (unix_timestamp("ended_at") - unix_timestamp("started_at")) / 60 )
-    df2 = df2.withColumn("date", to_date(col("started_at")))
-    avg_duration_per_day2 = df2.groupby("date").agg(avg("trip_duration_minutes").alias("avg_trip_duration_df2"))
-
-    combined_df = avg_duration_per_day1.join(avg_duration_per_day2, on = "date", how = "outer")
-    
-    combined_df = combined_df.withColumn(
-        "avg_trip_duration",
-        coalesce(col("avg_trip_duration_df1"), col("avg_trip_duration_df2"))
-    ).select("date", "avg_trip_duration")
-
-    combined_df.write.mode("overwrite").option("header", "true").csv(destination_path)
-
-    combined_df.show()
-
-    print(f"Dataframe Questão 1 salvo como um único arquivo CSV em {destination_path}")
-
-
-def question_2(dataframes, destination_path):
-    
-    df1 = dataframes[0].withColumn("date", to_date(col("start_time")))
-    df1 = df1.groupby("date").agg(count("start_time").alias("daily_trip_count_df1"))
-    
-    df2 = dataframes[1].withColumn("date", to_date(col("started_at")))
-    df2 = df2.groupby("date").agg(count("started_at").alias("daily_trip_count_df2"))
-
-    combined_df = df1.join(df2, on = "date", how = 'outer')
-
-    combined_df = combined_df.withColumn(
-        "daily_trip_count", 
-        coalesce(col("daily_trip_count_df1"), col("daily_trip_count_df2"))
-    ).select("date", "daily_trip_count")
-
-    combined_df.write.mode("overwrite").option("header", "true").csv(destination_path)
-
-    combined_df.show()
-
-    print(f"Dataframe Questão 2 salvo como um único arquivo CSV em {destination_path}")
-
-
-def question_3(dataframes, destination_path):
-
-    df1 = dataframes[0].withColumn("month", month("start_time"))
-    df1 = df1.groupby("from_station_name", "month").agg(count("from_station_name").alias("count"))
-
-    df1_max_station = df1.groupby("month").agg(max("count").alias("max_count")).withColumnRenamed("month", "month_max")
-    df1_max_station = df1_max_station.join(
-        df1, 
-        (df1_max_station["month_max"] == df1["month"]) & (df1_max_station["max_count"] == df1["count"])
-    ).select(
-        "month_max", "from_station_name"
-    )
-
-    df2 = dataframes[1].withColumn("month", month("started_at"))
-    df2 = df2.groupby("start_station_name", "month").agg(count("start_station_name").alias("count"))
-
-    df2_max_station = df2.groupby("month").agg(max("count").alias("max_count")).withColumnRenamed("month", "month_max")
-    df2_max_station = df2_max_station.join(
-        df2,
-        (df2_max_station["month_max"] == df2["month"]) & (df2_max_station["max_count"] == df2["count"])
-    ).select(
-        "month_max", "start_station_name"
-    )
-    
-    df1_max_station.show()
-    df2_max_station.show()
-
-    combined_df = df1_max_station.union(df2_max_station).orderBy("month_max").withColumnRenamed("month_max", "month")
-    combined_df.show()
-
-
 
 def main():
     zip_folder_path = "data"
@@ -148,9 +76,12 @@ def main():
 
     dataframes = read_csv_files(reports_folder, spark)
 
-    # question_1(dataframes, reports_questions)
-    # question_2(dataframes, reports_questions)
-    question_3(dataframes, reports_folder)
+    question_1(dataframes, reports_questions)
+    question_2(dataframes, reports_questions)
+    question_3(dataframes, reports_questions)
+    question_4(dataframes, reports_questions)
+    question_5(dataframes, reports_questions)
+    question_6(dataframes, reports_questions)
         
 if __name__ == "__main__":
     main()

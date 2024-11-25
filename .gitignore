@@ -2,3 +2,6 @@
 *.DS_Store*
 *postgres-data*
 *.csv
+*.crc
+_SUCCESS
+*.pyc
