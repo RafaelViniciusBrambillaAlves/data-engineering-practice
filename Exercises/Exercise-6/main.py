@@ -72,7 +72,7 @@ def main():
 
     spark = SparkSession.builder.appName("Exercise6").enableHiveSupport().getOrCreate()
 
-    # extract_and_copy_csv(zip_folder_path, temp_folder, reports_folder)
+    extract_and_copy_csv(zip_folder_path, temp_folder, reports_folder)
 
     dataframes = read_csv_files(reports_folder, spark)
 

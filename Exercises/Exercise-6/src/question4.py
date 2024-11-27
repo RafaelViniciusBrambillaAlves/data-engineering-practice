@@ -19,6 +19,6 @@ def question_4 (dataframes, destination_path):
 
     combined_df = rank_df1.union(rank_df2)
 
-    combined_df.write.mode("overwrite").option("header", "true").csv(f"{destination_path}/question4")
+    combined_df.coalesce(1).write.mode("overwrite").option("header", "true").csv(f"{destination_path}/question4")
 
     print(f"Dataframe Questão 4 salvo como CSV")
