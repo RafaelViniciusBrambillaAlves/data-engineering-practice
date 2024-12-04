@@ -8,7 +8,7 @@ def infer_sql_type(dtype):
     Inferir o tipo de dados para cada coluna do DataFrame.
 
     Parâmetros:
-    dtype -- O tipo de dados da coluna do DataFrame 
+    - dtype: O tipo de dados da coluna do DataFrame 
     
     Retorna:
     Uma string representando o tipo de dado SQL correspondente (INT, FLOAT, BOOLEAN, TIMESTAMP ou VARCHAR).
@@ -29,9 +29,9 @@ def generate_create_table(csv_file_path: str, table_name: str, dic_foreign_key) 
     Gerar a instrução SQL para criar a tabela com base no arquivo CSV.
 
     Parâmetros:
-    csv_file_path -- Caminho para o arquivo CSV 
-    table_name -- Nome da tabela a ser criada 
-    dic_foreign_key -- Dicionário para armazenar as chaves estrangeiras
+    - csv_file_path: Caminho para o arquivo CSV 
+    - table_name: Nome da tabela a ser criada 
+    - dic_foreign_key: Dicionário para armazenar as chaves estrangeiras
     
     Retorna:
     Uma string contendo o comando SQL para criação da tabela.
