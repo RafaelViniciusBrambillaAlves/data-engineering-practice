@@ -66,7 +66,6 @@ def processed_data(df: F.DataFrame, csv_name: str) -> F.DataFrame:
 
     return df
     
-
 def main():
     spark = SparkSession.builder.appName("Exercise7").enableHiveSupport().getOrCreate()
 
