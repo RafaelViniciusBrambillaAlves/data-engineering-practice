@@ -1,6 +1,13 @@
 from pyspark.sql.functions import col, to_date, unix_timestamp, avg, round, coalesce
 
-def question_1(dataframes, destination_path):
+def question_1(dataframes: list, destination_path: str) -> None:
+    """
+    Questão 1
+
+    Paramêtro:
+    - dataframes: Lista com os DataFrames
+    - destination_path: caminho para salvar o resultado em .csv
+    """
 
     df1 = dataframes[0].withColumn("trip_duration_minutes", (unix_timestamp("end_time") - unix_timestamp("start_time")) / 60)
     df1 = df1.withColumn("date", to_date(col("start_time")))

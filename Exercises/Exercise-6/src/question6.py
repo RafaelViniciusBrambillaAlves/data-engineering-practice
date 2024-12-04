@@ -2,7 +2,14 @@ from pyspark.sql.functions import avg, col, current_date, year, round
 import datetime
 
 
-def question_6 (dataframes, destination_path):
+def question_6 (dataframes: list, destination_path: str) -> None:
+    """
+    Questão 6
+
+    Paramêtro:
+    - dataframes: Lista com os DataFrames
+    - destination_path: caminho para salvar o resultado em .csv
+    """
 
     df1 = dataframes[0].withColumn("age", year(current_date()) - col("birthyear"))
 

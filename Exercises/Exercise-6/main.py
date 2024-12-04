@@ -1,5 +1,5 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, to_date, unix_timestamp, avg, coalesce, count, month, max
+from pyspark.sql.functions import col, to_date, unix_timestamp, avg, coalesce, count, month, max, DataFrame
 import os
 import zipfile
 import shutil
@@ -20,8 +20,16 @@ def create_dir(path: str) -> None:
 
     os.makedirs(path, exist_ok=True)
 
-def extract_and_copy_csv(zip_folder_path, temp_folder, reports_folder):
-    
+def extract_and_copy_csv(zip_folder_path:str, temp_folder: str, reports_folder: str) -> None:
+    """
+    Extração e cópia dos arquivos .csv
+
+    Parâmetros:
+    - zip_folder_path: caminho com os arquivos .zip
+    - temp_folder: caminho com a pasta temporária
+    - reports_folder: caminho final com os arquivos .csv
+    """
+
     create_dir(temp_folder)
     create_dir(reports_folder)
 
@@ -45,8 +53,18 @@ def extract_and_copy_csv(zip_folder_path, temp_folder, reports_folder):
 
     shutil.rmtree(temp_folder)
 
-def read_csv_files(reports_folder, spark):
-    
+def read_csv_files(reports_folder: str, spark) -> list:
+    """
+    Lê os arquivos .csv e retorna um DataFrame
+
+    Paramêtros:
+    - reports_folder: camihno dos arquivos .csv
+    - spark: sessão spark
+
+    Retorna:
+    Lista com DataFrames com os dados dos arquivos .csv
+
+    """
     csv_files = [
         os.path.join(reports_folder, file)
         for file in os.listdir(reports_folder) if file.endswith(".csv")

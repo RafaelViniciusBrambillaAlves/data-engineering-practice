@@ -2,7 +2,14 @@
 from pyspark.sql.functions import col, to_date, coalesce, count
 
 
-def question_2(dataframes, destination_path):
+def question_2(dataframes: list, destination_path: str) -> None:
+    """
+    Questão 2
+
+    Paramêtro:
+    - dataframes: Lista com os DataFrames
+    - destination_path: caminho para salvar o resultado em .csv
+    """
     
     df1 = dataframes[0].withColumn("date", to_date(col("start_time")))
     df1 = df1.groupby("date").agg(count("start_time").alias("daily_trip_count_df1"))

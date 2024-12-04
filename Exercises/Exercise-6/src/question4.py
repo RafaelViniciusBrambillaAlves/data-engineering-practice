@@ -1,7 +1,14 @@
 from pyspark.sql import Window
 from pyspark.sql.functions import col, to_date, count, row_number
 
-def question_4 (dataframes, destination_path):
+def question_4 (dataframes: list, destination_path: str) -> None: 
+    """
+    Questão 4
+
+    Paramêtro:
+    - dataframes: Lista com os DataFrames
+    - destination_path: caminho para salvar o resultado em .csv
+    """
 
     df1 = dataframes[0].withColumn("date", to_date(col("start_time")))
     df1 = df1.groupby("date", "to_station_name").agg(count("to_station_name").alias("count")).orderBy("date")

@@ -1,7 +1,14 @@
 
 from pyspark.sql.functions import count, month, max
 
-def question_3(dataframes, destination_path):
+def question_3(dataframes: list, destination_path: str) -> None:
+    """
+    Questão 3
+
+    Paramêtro:
+    - dataframes: Lista com os DataFrames
+    - destination_path: caminho para salvar o resultado em .csv
+    """
 
     df1 = dataframes[0].withColumn("month", month("start_time"))
     df1 = df1.groupby("from_station_name", "month").agg(count("from_station_name").alias("count"))
