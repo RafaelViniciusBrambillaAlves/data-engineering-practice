@@ -4,7 +4,19 @@ import os
 import zipfile
 from pyspark.sql import Window
 
-def extract_csv_from_zip(data_path, output_path):
+def extract_csv_from_zip(data_path: str, output_path: str) -> str:
+    """
+    Extrair o arquivo csv da pasta .zip 
+
+    Parâmetros:
+    - data_path: Caminho para extrair o arquivo \n
+    - output_path: Caminho para salvar o arquivo 
+
+    Retorna:
+    - Caminho com o arquivo .csv extraido \n
+    - Nome do arquivo .csv extraido
+    """
+
     for file in os.listdir(data_path):
         print(file)
         if file.endswith(".zip"):
@@ -16,7 +28,19 @@ def extract_csv_from_zip(data_path, output_path):
                         return os.path.join(output_path, file_name), file_name
             raise FileNotFoundError("Nenhum arquivo encontrado no Zip.")
         
-def processed_data(df, csv_name):
+        
+def processed_data(df: F.DataFrame, csv_name: str) -> F.DataFrame:
+    """
+    Processa os dados dataframes
+
+    Parâmetros:
+    - df: Dataframe a ser processado \n
+    - csv_name: Nome do Arquivo 
+
+    Retorna:
+    Dataframe processado
+    """
+
     # 1
     df = df.withColumn("source_file", F.lit(csv_name))
 
@@ -34,8 +58,11 @@ def processed_data(df, csv_name):
     # 4
     df2 = df.select("model", "capacity_bytes").dropDuplicates()
     window_spec = Window.orderBy(F.col("capacity_bytes").desc())
-    df2 = df2.withColumn("rank", F.rank().over(window_spec))
-    df = df.join(df2.select("model", "rank"), on = "model", how = "left")
+    df2 = df2.withColumn("storage_ranking", F.rank().over(window_spec))
+    df = df.join(df2.select("model", "storage_ranking"), on = "model", how = "left")
+
+    # 5
+    df = df.withColumn("primary_key", F.sha2(F.concat_ws("||", *df.columns), 256))
 
     return df
     
