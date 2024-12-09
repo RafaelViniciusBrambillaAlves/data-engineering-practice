@@ -5,3 +5,4 @@
 *.crc
 _SUCCESS
 *.pyc
+*.duckdb
