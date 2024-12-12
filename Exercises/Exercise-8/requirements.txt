@@ -1,3 +1,5 @@
 pytest
 duckdb
 pandas==1.5
+pyarrow
+fastparquet

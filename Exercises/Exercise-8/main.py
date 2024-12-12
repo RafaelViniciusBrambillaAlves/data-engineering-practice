@@ -67,18 +67,38 @@ def questions(conn):
     for row in results:
         print(row)
 
-    print()
+    print("Carro mais popular em cada código postal")
     results = conn.execute("""
+            SELECT codigo_postal,
+                   marca,
+                   modelo 
+            FROM (
+                SELECT "Postal_Code" AS codigo_postal,
+                    make AS marca,
+                    model AS modelo,
+                    COUNT(model) AS popularidade,
+                    ROW_NUMBER() OVER (PARTITION BY "Postal_Code" ORDER BY COUNT(model) DESC) AS rank
+                FROM electric_cars
+                GROUP BY "Postal_Code", make, model
+            )
+            WHERE rank = 1
+            ORDER BY codigo_postal;
         """).fetchall()
     for row in results:
         print(row)
     
-    print()
+    print("Quantidade de carros por ano de modelo")
     results = conn.execute("""
+            SELECT Model_Year AS ano_modelo,
+                   COUNT(Model) AS quantidade
+            FROM electric_cars
+            GROUP BY Model_Year
+            ORDER BY Model_Year ASC
+        """).fetchdf()
+    
+    output_dir = "data/electric_cars_by_year"
+    results.to_parquet(output_dir, index = False, partition_cols = ["ano_modelo"])
 
-        """).fetchall()
-    for row in results:
-        print(row)
     
 def main():
 
