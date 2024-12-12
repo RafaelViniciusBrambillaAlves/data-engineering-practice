@@ -1,11 +1,8 @@
 version: "3.9"
 services:
-    test:
-      image: "exercise-9"
-      volumes:
-        - .:/app
-      command: python3 -m pytest
     run:
+      build: 
+        context: .
       image: "exercise-9"
       volumes:
         - .:/app
