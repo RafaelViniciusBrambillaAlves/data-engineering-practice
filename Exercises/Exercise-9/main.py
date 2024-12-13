@@ -39,7 +39,9 @@ def main():
     ]).collect()
 
     average_rides_per_week = rides_per_week["ride_count"].mean()
+
     min_rides_per_week = rides_per_week["ride_count"].min()
+    
     max_rides_per_week = rides_per_week["ride_count"].max()
 
     rides_per_day = lazy_df_with_date_and_week.group_by(["date", "week", "weekday"]).agg([
@@ -49,7 +51,7 @@ def main():
     rides_previous_week = rides_per_day.with_columns(
         (pl.col("week") + 1).alias("week")  
     ).select(["week", "weekday", "ride_count"])  
-    
+
     rides_with_diff = rides_per_day.join(
         rides_previous_week.with_columns(
             pl.col("ride_count").fill_null(0).alias("ride_count")
